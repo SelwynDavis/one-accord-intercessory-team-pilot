@@ -1,0 +1,18 @@
+{
+  "name": "One Accord CPM | Servant Intercessory Team",
+  "short_name": "One Accord",
+  "description": "Servant Intercessory Team 30-day One Accord CPM prayer pilot.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#062352",
+  "icons": [
+    {
+      "src": "assets/one-accord-cpm-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

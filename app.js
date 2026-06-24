@@ -2147,7 +2147,7 @@ function intercessoryPacket({
     devotional: devotionalFocus.split("\n\n"),
     devotionalFocus,
     rhythm:
-      "Tuesday is individual prayer throughout the day. Wednesday begins with corporate prayer at 8:00 AM, followed by individual midday and evening return.",
+      "Tuesday is individual prayer and devotion throughout the day. Wednesday begins with corporate prayer at 7:15 AM, followed by individual midday and evening return.",
     coreTargets: prayerTargets,
     prayerTargets,
     localTargets,
@@ -2155,7 +2155,7 @@ function intercessoryPacket({
     morningPrayer,
     middayPrayerTitle: "Wednesday Midday and Evening Return | Individual Prayer",
     middayPrayer,
-    eveningPrayerTitle: "Wednesday Corporate Prayer | 8:00 AM",
+    eveningPrayerTitle: "Wednesday Corporate Prayer | 7:15 AM",
     eveningPrayer,
     reflectionQuestions,
     journalingPrompt,
@@ -2189,21 +2189,21 @@ Object.assign(seedState, {
       title: "30-Day Intercessory Team Rhythm",
       date: "Tuesday and Wednesday",
       time:
-        "Tuesday individual prayer all day; Wednesday corporate prayer at 8:00 AM, with individual midday and evening return.",
+        "Tuesday individual prayer and devotion all day; Wednesday corporate prayer at 7:15 AM, with individual midday and evening return.",
       location: "Personal prayer and Wednesday group prayer",
     },
     {
       id: "sched-2",
       title: "Wednesday Corporate Prayer",
       date: "Wednesday",
-      time: "8:00 AM - 8:40 AM",
+      time: "7:15 AM - 7:45 AM",
       location: "Zoom / group gathering",
     },
   ],
   zoom: {
     url: "https://zoom.us/j/0000000000",
     label: "Join Wednesday Corporate Prayer",
-    details: "Wednesday at 8:00 AM",
+    details: "Wednesday at 7:15 AM",
   },
   leaders: [
     {
@@ -2559,11 +2559,42 @@ function normalizeState(appState) {
   }
 
   appState.packets = appState.packets.map(enrichPacket).sort((a, b) => a.week - b.week);
+  migrateIntercessoryTeamDefaults(appState);
   if (!appState.editingPacketId || !appState.packets.some((packet) => packet.id === appState.editingPacketId)) {
     appState.editingPacketId = activePacketFrom(appState).id;
   }
 
   return appState;
+}
+
+function migrateIntercessoryTeamDefaults(appState) {
+  if (appState.accessCode !== "INTERCESSORS-PRAY") return;
+
+  const rhythm = appState.schedule?.[0];
+  const gathering = appState.schedule?.[1];
+
+  if (rhythm?.time?.includes("8:00 AM")) {
+    rhythm.time =
+      "Tuesday individual prayer and devotion all day; Wednesday corporate prayer at 7:15 AM, with individual midday and evening return.";
+  }
+
+  if (gathering?.time === "8:00 AM - 8:40 AM") {
+    gathering.time = "7:15 AM - 7:45 AM";
+  }
+
+  if (appState.zoom?.details === "Wednesday at 8:00 AM") {
+    appState.zoom.details = "Wednesday at 7:15 AM";
+  }
+
+  (appState.packets || []).forEach((packet) => {
+    if (packet.eveningPrayerTitle === "Wednesday Corporate Prayer | 8:00 AM") {
+      packet.eveningPrayerTitle = "Wednesday Corporate Prayer | 7:15 AM";
+    }
+    if (packet.rhythm?.includes("Wednesday begins with corporate prayer at 8:00 AM")) {
+      packet.rhythm =
+        "Tuesday is individual prayer and devotion throughout the day. Wednesday begins with corporate prayer at 7:15 AM, followed by individual midday and evening return.";
+    }
+  });
 }
 
 function normalizeFastingSeason(season = {}) {
@@ -2875,6 +2906,8 @@ function activePacket() {
 }
 
 function packetDateLabel(packet) {
+  if (packet.groupSpecific && packet.focusDate) return packet.focusDate;
+
   if (state.rotation?.startDate && packet.week >= 1) {
     const start = new Date(`${state.rotation.startDate}T00:00:00`);
     const entryWeek = Number(state.rotation.entryWeek || 1);
@@ -3527,6 +3560,8 @@ async function handleCheckIn() {
 }
 
 function renderPacket(packet) {
+  const tuesdayTargets = packet.prayerTargets.filter((target) => target.toLowerCase().startsWith("tuesday:"));
+  const wednesdayTargets = packet.prayerTargets.filter((target) => target.toLowerCase().startsWith("wednesday:"));
   return `
     <section class="section card">
       <div class="meta-row">
@@ -3535,6 +3570,22 @@ function renderPacket(packet) {
       </div>
       <h2 style="margin-top:12px">${escapeHtml(packetDateLabel(packet))} | Focus: ${escapeHtml(packet.focusLabel || packet.theme)}</h2>
       <p class="muted"><strong>Prayer rhythm:</strong> ${escapeHtml(packet.rhythm)}</p>
+    </section>
+
+    <section class="section grid two">
+      <article class="card prayer-window">
+        <p class="eyebrow">Day 1 - Tuesday</p>
+        <h3>Individual Prayer and Devotion</h3>
+        <p>Carry this week's focus personally throughout the day. Read the Tuesday anchor, pray the Tuesday targets, and use the private notes area to capture what God highlights.</p>
+        ${tuesdayTargets.length ? `<ul class="list compact-list">${tuesdayTargets.map((target) => `<li>${escapeHtml(target.replace(/^Tuesday:\s*/i, ""))}</li>`).join("")}</ul>` : ""}
+      </article>
+      <article class="card prayer-window">
+        <p class="eyebrow">Day 2 - Wednesday</p>
+        <h3>Corporate Prayer at ${escapeHtml(gatheringTimeLabel())}</h3>
+        <p>Gather with the team for corporate prayer, then return privately at midday and evening to keep the same weekly focus before the Lord.</p>
+        ${wednesdayTargets.length ? `<ul class="list compact-list">${wednesdayTargets.map((target) => `<li>${escapeHtml(target.replace(/^Wednesday:\s*/i, ""))}</li>`).join("")}</ul>` : ""}
+        <a class="button" href="${escapeHtml(state.zoom.url)}" target="_blank" rel="noreferrer">${escapeHtml(state.zoom.label)}</a>
+      </article>
     </section>
 
     <section class="section card">
@@ -3562,19 +3613,20 @@ function renderPacket(packet) {
 
     <section class="section grid three">
       <article class="card prayer-window">
-        <p class="eyebrow">Morning</p>
+        <p class="eyebrow">Tuesday</p>
         <h3>${escapeHtml(packet.morningPrayerTitle)}</h3>
         <p>${escapeHtml(packet.morningPrayer)}</p>
       </article>
       <article class="card prayer-window">
-        <p class="eyebrow">Midday</p>
+        <p class="eyebrow">Wednesday Return</p>
         <h3>${escapeHtml(packet.middayPrayerTitle)}</h3>
         <p>${escapeHtml(packet.middayPrayer)}</p>
       </article>
       <article class="card prayer-window">
-        <p class="eyebrow">Evening</p>
+        <p class="eyebrow">Wednesday Corporate Prayer</p>
         <h3>${escapeHtml(packet.eveningPrayerTitle)}</h3>
         <p>${escapeHtml(packet.eveningPrayer)}</p>
+        <a class="ghost-button" href="${escapeHtml(state.zoom.url)}" target="_blank" rel="noreferrer">${escapeHtml(state.zoom.label)}</a>
       </article>
     </section>
 
@@ -3591,8 +3643,8 @@ function renderPacket(packet) {
     </section>
 
     <section class="section card">
-      <h3>Daily Check-In</h3>
-      <p class="muted">This checklist stays on this device only. It is not visible to leaders and does not create streaks or rankings.</p>
+      <h3>Private Prayer and Devotion Tracker</h3>
+      <p class="muted">This tracker stays on this device only. It is not visible to leaders and does not create streaks, rankings, or spiritual scores.</p>
       ${renderDailyCheckIn(packet)}
     </section>
 
@@ -3642,9 +3694,10 @@ function dailyCheckState(packet) {
 function renderDailyCheckIn(packet) {
   const checks = dailyCheckState(packet);
   const items = [
-    ["morning", "Morning prayer completed"],
-    ["midday", "Midday prayer completed"],
-    ["evening", "Evening prayer completed"],
+    ["tuesdayDevotion", "Tuesday devotion read"],
+    ["tuesdayPrayer", "Tuesday individual prayer completed"],
+    ["wednesdayCorporate", "Wednesday corporate prayer joined"],
+    ["wednesdayReturn", "Wednesday midday/evening prayer return completed"],
   ];
 
   return `
@@ -3882,7 +3935,7 @@ function renderSchedule() {
     <section class="section card">
       <p class="eyebrow">Prayer Schedule</p>
       <h2>Servant Intercessory Team Rhythm</h2>
-      <p class="muted">A 30-day pilot rhythm with Tuesday individual prayer and Wednesday 8:00 AM corporate prayer, followed by individual midday and evening return.</p>
+      <p class="muted">A 30-day pilot rhythm with Tuesday individual prayer and Wednesday 7:15 AM corporate prayer, followed by individual midday and evening return.</p>
     </section>
     <section class="section grid two">
       ${state.schedule

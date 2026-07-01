@@ -2247,9 +2247,9 @@ Object.assign(seedState, {
       primaryScripture:
         "Tuesday Anchor - Jeremiah 17:14 - Heal me, Lord, and I will be healed; save me and I will be saved, for You are the one I praise.",
       supporting: [
+        "Tuesday Supporting Passage - Psalm 147:3 - He heals the brokenhearted and binds up their wounds.",
         "Wednesday Anchor - James 5:14-16 - The prayer offered in faith will make the sick person well, and the prayer of a righteous person is powerful and effective.",
-        "Psalm 147:3 - He heals the brokenhearted and binds up their wounds.",
-        "Mark 5:34 - Jesus told the woman that her faith had made her whole and to go in peace.",
+        "Wednesday Supporting Passage - Mark 5:34 - Jesus told the woman that her faith had made her whole and to go in peace.",
       ],
       devotionalFocus:
         "Healing is not only physical recovery. It includes emotional wounds, family pain, spiritual weariness, church hurt, grief, fear, and places where hope has become thin. This first week asks the Servant Intercessory Team to begin with compassion and faith. We are not pretending that pain is simple, and we are not promising outcomes on our timetable. We are bringing real people, real bodies, real memories, and real burdens before the Lord who heals.\n\nTuesday is a day of individual intercession. Each person carries the healing focus personally and names the places where healing is needed. Wednesday morning gathers the team in one accord, asking God to make Servant Church a safe, prayerful, discerning place where people can encounter His care.",
@@ -2290,9 +2290,9 @@ Object.assign(seedState, {
       primaryScripture:
         "Tuesday Anchor - 1 Chronicles 4:10 - Jabez cried out for God to bless him and enlarge his territory.",
       supporting: [
+        "Tuesday Supporting Passage - Psalm 90:17 - May the favor of the Lord establish the work of our hands.",
         "Wednesday Anchor - Isaiah 54:2-3 - Enlarge the place of your tent; stretch your tent curtains wide.",
-        "Deuteronomy 1:8 - God instructed His people to go in and possess what He had set before them.",
-        "Psalm 90:17 - May the favor of the Lord establish the work of our hands.",
+        "Wednesday Supporting Passage - Deuteronomy 1:8 - God instructed His people to go in and possess what He had set before them.",
       ],
       devotionalFocus:
         "Increased territory is not ambition dressed in spiritual language. For Servant Church, the prayer for territory is a prayer for faithful capacity: space to serve, room to gather, stability for ministry, and a permanent building that supports the assignment. We are asking God to enlarge what can be entrusted, not simply what can be possessed.\n\nTuesday focuses on surrendering motives and praying for provision. Wednesday focuses on unity, wisdom, favor, and readiness. If God opens a door, the church must be spiritually prepared to steward it with humility, excellence, and mission.",
@@ -2333,9 +2333,9 @@ Object.assign(seedState, {
       primaryScripture:
         "Tuesday Anchor - Matthew 9:37-38 - The harvest is plentiful but the workers are few; ask the Lord of the harvest to send laborers.",
       supporting: [
+        "Tuesday Supporting Passage - Romans 12:4-8 - The body has different gifts, and each gift has a purpose.",
         "Wednesday Anchor - Exodus 36:1-2 - God stirred skilled and willing workers to carry out the work.",
-        "Romans 12:4-8 - The body has different gifts, and each gift has a purpose.",
-        "2 Timothy 2:2 - Entrust the work to reliable people who will also be qualified to teach others.",
+        "Wednesday Supporting Passage - 2 Timothy 2:2 - Entrust the work to reliable people who will also be qualified to teach others.",
       ],
       devotionalFocus:
         "Every God-given vision requires God-sent people. Passion matters, but vision cannot be sustained by passion alone. The church needs willing hearts, faithful hands, mature character, spiritual discernment, and people aligned with the assignment. Jesus did not merely tell the disciples to notice the harvest. He told them to pray for laborers.\n\nTuesday asks each intercessor to pray for the right people. Wednesday asks the team to pray for alignment: leaders, servants, administrators, intercessors, teachers, outreach workers, and those who may already be near the vision but have not yet recognized their role.",
@@ -2376,9 +2376,9 @@ Object.assign(seedState, {
       primaryScripture:
         "Tuesday Anchor - Luke 19:10 - The Son of Man came to seek and to save the lost.",
       supporting: [
+        "Tuesday Supporting Passage - 2 Peter 3:9 - The Lord is patient, not wanting anyone to perish but everyone to come to repentance.",
         "Wednesday Anchor - Romans 10:13-15 - Everyone who calls on the name of the Lord will be saved, and messengers must be sent.",
-        "Acts 2:41-47 - The early church saw people added as the gospel was received and community was formed.",
-        "2 Peter 3:9 - The Lord is patient, not wanting anyone to perish but everyone to come to repentance.",
+        "Wednesday Supporting Passage - Acts 2:41-47 - The early church saw people added as the gospel was received and community was formed.",
       ],
       devotionalFocus:
         "Salvation must remain more than a ministry category. It is the heartbeat of the church's assignment. Servant Church is praying not only to grow in number, but to become a place where people are genuinely led to Christ, discipled with care, and welcomed into a community shaped by grace and truth.\n\nTuesday focuses on people who need to know Christ. Wednesday focuses on the church's witness: clarity, compassion, courage, invitation, follow-up, and discipleship. We are asking God to make soul-winning foundational, not occasional.",
@@ -2419,9 +2419,9 @@ Object.assign(seedState, {
       primaryScripture:
         "Tuesday Anchor - Colossians 4:2-4 - Devote yourselves to prayer, being watchful and thankful, and pray that God may open a door for the message.",
       supporting: [
+        "Tuesday Supporting Passage - Galatians 6:9 - Do not grow weary in doing good, for a harvest comes in due season.",
         "Wednesday Anchor - John 15:16 - Jesus appointed His disciples to go and bear fruit that remains.",
-        "1 Corinthians 3:6-7 - One plants and another waters, but God gives the increase.",
-        "Galatians 6:9 - Do not grow weary in doing good, for a harvest comes in due season.",
+        "Wednesday Supporting Passage - 1 Corinthians 3:6-7 - One plants and another waters, but God gives the increase.",
       ],
       devotionalFocus:
         "The final week gathers the whole 30-day burden into one question: how do we continue faithfully after the pilot? Healing, territory, laborers, and salvation are not separate concerns. They belong together in a church that wants to be healthy enough to receive people, spacious enough to serve them, staffed enough to disciple them, and gospel-centered enough to keep Christ at the foundation.\n\nTuesday is a day of thanksgiving, listening, and naming what God has highlighted. Wednesday closes the pilot by asking God to establish a sustainable intercessory rhythm that strengthens Servant Church beyond this first 30 days.",
@@ -2594,7 +2594,49 @@ function migrateIntercessoryTeamDefaults(appState) {
       packet.rhythm =
         "Tuesday is individual prayer and devotion throughout the day. Wednesday begins with corporate prayer at 7:15 AM, followed by individual midday and evening return.";
     }
+    applyBalancedIntercessoryScriptures(packet);
   });
+}
+
+function applyBalancedIntercessoryScriptures(packet) {
+  const balancedScriptures = {
+    1: [
+      "Tuesday Anchor - Jeremiah 17:14 - Heal me, Lord, and I will be healed; save me and I will be saved, for You are the one I praise.",
+      "Tuesday Supporting Passage - Psalm 147:3 - He heals the brokenhearted and binds up their wounds.",
+      "Wednesday Anchor - James 5:14-16 - The prayer offered in faith will make the sick person well, and the prayer of a righteous person is powerful and effective.",
+      "Wednesday Supporting Passage - Mark 5:34 - Jesus told the woman that her faith had made her whole and to go in peace.",
+    ],
+    2: [
+      "Tuesday Anchor - 1 Chronicles 4:10 - Jabez cried out for God to bless him and enlarge his territory.",
+      "Tuesday Supporting Passage - Psalm 90:17 - May the favor of the Lord establish the work of our hands.",
+      "Wednesday Anchor - Isaiah 54:2-3 - Enlarge the place of your tent; stretch your tent curtains wide.",
+      "Wednesday Supporting Passage - Deuteronomy 1:8 - God instructed His people to go in and possess what He had set before them.",
+    ],
+    3: [
+      "Tuesday Anchor - Matthew 9:37-38 - The harvest is plentiful but the workers are few; ask the Lord of the harvest to send laborers.",
+      "Tuesday Supporting Passage - Romans 12:4-8 - The body has different gifts, and each gift has a purpose.",
+      "Wednesday Anchor - Exodus 36:1-2 - God stirred skilled and willing workers to carry out the work.",
+      "Wednesday Supporting Passage - 2 Timothy 2:2 - Entrust the work to reliable people who will also be qualified to teach others.",
+    ],
+    4: [
+      "Tuesday Anchor - Luke 19:10 - The Son of Man came to seek and to save the lost.",
+      "Tuesday Supporting Passage - 2 Peter 3:9 - The Lord is patient, not wanting anyone to perish but everyone to come to repentance.",
+      "Wednesday Anchor - Romans 10:13-15 - Everyone who calls on the name of the Lord will be saved, and messengers must be sent.",
+      "Wednesday Supporting Passage - Acts 2:41-47 - The early church saw people added as the gospel was received and community was formed.",
+    ],
+    5: [
+      "Tuesday Anchor - Colossians 4:2-4 - Devote yourselves to prayer, being watchful and thankful, and pray that God may open a door for the message.",
+      "Tuesday Supporting Passage - Galatians 6:9 - Do not grow weary in doing good, for a harvest comes in due season.",
+      "Wednesday Anchor - John 15:16 - Jesus appointed His disciples to go and bear fruit that remains.",
+      "Wednesday Supporting Passage - 1 Corinthians 3:6-7 - One plants and another waters, but God gives the increase.",
+    ],
+  };
+  const scriptures = balancedScriptures[packet.week];
+  if (!scriptures) return;
+
+  packet.primaryScripture = scriptures[0];
+  packet.supporting = scriptures.slice(1);
+  packet.anchorScriptures = scriptures;
 }
 
 function normalizeFastingSeason(season = {}) {

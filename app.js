@@ -2971,6 +2971,88 @@ function gatheringTimeLabel() {
   return gathering?.time || state.zoom.details || "Evening gathering time";
 }
 
+function corporatePrayerTimeParts() {
+  const timeText = gatheringTimeLabel();
+  const match = String(timeText).match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)/i);
+  if (!match) return { hour: 7, minute: 15 };
+
+  let hour = Number(match[1]);
+  const minute = Number(match[2] || 0);
+  const meridiem = match[3].toUpperCase();
+  if (meridiem === "PM" && hour < 12) hour += 12;
+  if (meridiem === "AM" && hour === 12) hour = 0;
+  return { hour, minute };
+}
+
+function nextCorporatePrayerDate() {
+  const { hour, minute } = corporatePrayerTimeParts();
+  const nextDate = new Date();
+  nextDate.setHours(hour, minute, 0, 0);
+  const wednesday = 3;
+  let daysUntil = (wednesday - nextDate.getDay() + 7) % 7;
+  if (daysUntil === 0 && nextDate <= new Date()) daysUntil = 7;
+  nextDate.setDate(nextDate.getDate() + daysUntil);
+  return nextDate;
+}
+
+function calendarDate(value) {
+  return value
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/\.\d{3}Z$/, "Z");
+}
+
+function escapeCalendarText(value) {
+  return String(value || "")
+    .replace(/\\/g, "\\\\")
+    .replace(/\n/g, "\\n")
+    .replace(/,/g, "\\,")
+    .replace(/;/g, "\\;");
+}
+
+function downloadCorporatePrayerReminder() {
+  const start = nextCorporatePrayerDate();
+  const end = new Date(start);
+  end.setMinutes(end.getMinutes() + 30);
+  const description = [
+    "Servant Intercessory Team corporate prayer.",
+    state.zoom.url ? `Join: ${state.zoom.url}` : "",
+    "This reminder is saved only to your own calendar.",
+  ]
+    .filter(Boolean)
+    .join("\n");
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//One Accord CPM//Servant Intercessory Team//EN",
+    "CALSCALE:GREGORIAN",
+    "BEGIN:VEVENT",
+    `UID:one-accord-intercessory-team-${state.accessCode}@oneaccordcpm`,
+    `DTSTAMP:${calendarDate(new Date())}`,
+    `DTSTART:${calendarDate(start)}`,
+    `DTEND:${calendarDate(end)}`,
+    "RRULE:FREQ=WEEKLY;BYDAY=WE",
+    "SUMMARY:One Accord Corporate Prayer",
+    `DESCRIPTION:${escapeCalendarText(description)}`,
+    `LOCATION:${escapeCalendarText(state.zoom.url || "One Accord CPM hub")}`,
+    "BEGIN:VALARM",
+    "TRIGGER:-PT15M",
+    "ACTION:DISPLAY",
+    "DESCRIPTION:One Accord corporate prayer begins soon.",
+    "END:VALARM",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+
+  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "one-accord-corporate-prayer-reminder.ics";
+  link.click();
+  URL.revokeObjectURL(link.href);
+  showToast("Calendar reminder downloaded. Open it to add the weekly alert.");
+}
+
 function editablePacket() {
   return state.packets.find((packet) => packet.id === state.editingPacketId) || activePacket();
 }
@@ -3215,6 +3297,7 @@ function renderHome() {
         <div class="actions-grid">
           <button class="button gold" onclick="setView('packet')">View This Week's Anchor Packet</button>
           <a class="ghost-button" href="${escapeHtml(state.zoom.url)}" target="_blank" rel="noreferrer">${escapeHtml(state.zoom.label)}</a>
+          <button class="ghost-button" onclick="downloadCorporatePrayerReminder()">Add Corporate Prayer Reminder</button>
           <button class="ghost-button" onclick="handleCheckIn()">${checkedIn ? "Corporate Check-In Recorded" : "Corporate Prayer Check-In"}</button>
         </div>
       </div>
@@ -3627,6 +3710,7 @@ function renderPacket(packet) {
         <p>Gather with the team for corporate prayer, then return privately at midday and evening to keep the same weekly focus before the Lord.</p>
         ${wednesdayTargets.length ? `<ul class="list compact-list">${wednesdayTargets.map((target) => `<li>${escapeHtml(target.replace(/^Wednesday:\s*/i, ""))}</li>`).join("")}</ul>` : ""}
         <a class="button" href="${escapeHtml(state.zoom.url)}" target="_blank" rel="noreferrer">${escapeHtml(state.zoom.label)}</a>
+        <button class="ghost-button" onclick="downloadCorporatePrayerReminder()">Add Reminder</button>
       </article>
     </section>
 
@@ -3669,6 +3753,7 @@ function renderPacket(packet) {
         <h3>${escapeHtml(packet.eveningPrayerTitle)}</h3>
         <p>${escapeHtml(packet.eveningPrayer)}</p>
         <a class="ghost-button" href="${escapeHtml(state.zoom.url)}" target="_blank" rel="noreferrer">${escapeHtml(state.zoom.label)}</a>
+        <button class="ghost-button" onclick="downloadCorporatePrayerReminder()">Add Reminder</button>
       </article>
     </section>
 
@@ -3694,6 +3779,7 @@ function renderPacket(packet) {
       <h3>Gathering Details</h3>
       <p>${escapeHtml(state.zoom.details)}</p>
       <a class="button" href="${escapeHtml(state.zoom.url)}" target="_blank" rel="noreferrer">${escapeHtml(state.zoom.label)}</a>
+      <button class="ghost-button" onclick="downloadCorporatePrayerReminder()">Add Corporate Prayer Reminder</button>
     </section>
   `;
 }

@@ -277,6 +277,12 @@ a {
   border-color: var(--gold);
 }
 
+.button.teal {
+  color: #fff;
+  background: var(--teal);
+  border-color: var(--teal);
+}
+
 .ghost-button {
   color: var(--navy);
   background: #fff;
@@ -318,6 +324,12 @@ a {
 .danger-button:hover {
   transform: translateY(-1px);
   box-shadow: 0 9px 20px rgba(8, 40, 90, 0.14);
+}
+
+.prayer-window .button,
+.section.card > .button {
+  margin-top: 10px;
+  margin-right: 8px;
 }
 
 .section {

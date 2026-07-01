@@ -3296,8 +3296,8 @@ function renderHome() {
         </div>
         <div class="actions-grid">
           <button class="button gold" onclick="setView('packet')">View This Week's Anchor Packet</button>
-          <a class="ghost-button" href="${escapeHtml(state.zoom.url)}" target="_blank" rel="noreferrer">${escapeHtml(state.zoom.label)}</a>
-          <button class="ghost-button" onclick="downloadCorporatePrayerReminder()">Add Corporate Prayer Reminder</button>
+          <a class="button teal" href="${escapeHtml(state.zoom.url)}" target="_blank" rel="noreferrer">${escapeHtml(state.zoom.label)}</a>
+          <button class="button gold" onclick="downloadCorporatePrayerReminder()">Add Corporate Prayer Reminder</button>
           <button class="ghost-button" onclick="handleCheckIn()">${checkedIn ? "Corporate Check-In Recorded" : "Corporate Prayer Check-In"}</button>
         </div>
       </div>
@@ -3709,8 +3709,8 @@ function renderPacket(packet) {
         <h3>Corporate Prayer at ${escapeHtml(gatheringTimeLabel())}</h3>
         <p>Gather with the team for corporate prayer, then return privately at midday and evening to keep the same weekly focus before the Lord.</p>
         ${wednesdayTargets.length ? `<ul class="list compact-list">${wednesdayTargets.map((target) => `<li>${escapeHtml(target.replace(/^Wednesday:\s*/i, ""))}</li>`).join("")}</ul>` : ""}
-        <a class="button" href="${escapeHtml(state.zoom.url)}" target="_blank" rel="noreferrer">${escapeHtml(state.zoom.label)}</a>
-        <button class="ghost-button" onclick="downloadCorporatePrayerReminder()">Add Reminder</button>
+        <a class="button teal" href="${escapeHtml(state.zoom.url)}" target="_blank" rel="noreferrer">${escapeHtml(state.zoom.label)}</a>
+        <button class="button gold" onclick="downloadCorporatePrayerReminder()">Add Corporate Prayer Reminder</button>
       </article>
     </section>
 
@@ -3752,8 +3752,8 @@ function renderPacket(packet) {
         <p class="eyebrow">Wednesday Corporate Prayer</p>
         <h3>${escapeHtml(packet.eveningPrayerTitle)}</h3>
         <p>${escapeHtml(packet.eveningPrayer)}</p>
-        <a class="ghost-button" href="${escapeHtml(state.zoom.url)}" target="_blank" rel="noreferrer">${escapeHtml(state.zoom.label)}</a>
-        <button class="ghost-button" onclick="downloadCorporatePrayerReminder()">Add Reminder</button>
+        <a class="button teal" href="${escapeHtml(state.zoom.url)}" target="_blank" rel="noreferrer">${escapeHtml(state.zoom.label)}</a>
+        <button class="button gold" onclick="downloadCorporatePrayerReminder()">Add Corporate Prayer Reminder</button>
       </article>
     </section>
 
@@ -3778,8 +3778,8 @@ function renderPacket(packet) {
     <section class="section card">
       <h3>Gathering Details</h3>
       <p>${escapeHtml(state.zoom.details)}</p>
-      <a class="button" href="${escapeHtml(state.zoom.url)}" target="_blank" rel="noreferrer">${escapeHtml(state.zoom.label)}</a>
-      <button class="ghost-button" onclick="downloadCorporatePrayerReminder()">Add Corporate Prayer Reminder</button>
+      <a class="button teal" href="${escapeHtml(state.zoom.url)}" target="_blank" rel="noreferrer">${escapeHtml(state.zoom.label)}</a>
+      <button class="button gold" onclick="downloadCorporatePrayerReminder()">Add Corporate Prayer Reminder</button>
     </section>
   `;
 }
